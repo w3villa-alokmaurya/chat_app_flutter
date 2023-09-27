@@ -14,6 +14,8 @@ class AuthProvider extends ChangeNotifier {
 
   String _email = '';
   String _password = '';
+  String _token = '';
+  String get token => _token;
 
   User? _user; // Store the signed-up user data
 

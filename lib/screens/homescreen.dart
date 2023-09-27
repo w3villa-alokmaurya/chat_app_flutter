@@ -1,5 +1,6 @@
 import 'package:chat_app/providers/auth_provider.dart';
 import 'package:chat_app/providers/theme_provider.dart';
+import 'package:chat_app/providers/user_provider.dart';
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/widgets/message_widget.dart';
 import 'package:flutter/material.dart';
@@ -14,19 +15,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMzRiZmY5NS1jYTkzLTQzYWItOTQ3MC05NmYxMWU4N2E4OWUiLCJzdWIiOiI0Iiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjk1ODE5NzI3LCJleHAiOjE2OTU4MjY5Mjd9.mf6X3hYUrBC5PQc1NxoronalznUttRvQMQMvyyRE-E4';
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<UserProvider>(context, listen: false).getData(token);
+  }
+
   String selectedValue = 'Option 1';
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    // final authProvider = Provider.of<AuthProvider>(context);
+    // final themeProvider = Provider.of<ThemeProvider>(context);
 
-    if (!authProvider.isLoggedIn) {
-      Future.delayed(Duration.zero, () {
+    if (!context.read<AuthProvider>().isLoggedIn) {
+      Future.delayed(const Duration(seconds: 1), () {
         // <---- This is not a widget
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const LoginScreen()));
       });
     }
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(),
@@ -48,8 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: <Widget>[
                           GestureDetector(
-                              onTap: () async {
-                                authProvider.signOut();
+                              onTap: () {
+                                context.read<AuthProvider>().signOut();
+                                // <---- This is not a widget
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+
                                 Fluttertoast.showToast(
                                     msg: 'Logged out Successfully',
                                     toastLength: Toast.LENGTH_SHORT,
@@ -58,11 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     backgroundColor: Colors.black,
                                     textColor: Colors.white,
                                     fontSize: 16.0);
-                                await Future.delayed(const Duration(seconds: 1),
-                                    () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/signin');
-                                });
                               },
                               child: const Icon(
                                 Icons.logout,
@@ -72,10 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.only(left: 16, right: 8),
                             child: GestureDetector(
                               onTap: () {
-                                themeProvider.setTheme();
+                                context.read<ThemeProvider>().setTheme();
                               },
                               child: Icon(
-                                themeProvider.isDark
+                                context.read<ThemeProvider>().isDark
                                     ? Icons.dark_mode
                                     : Icons.light_mode,
                                 size: 24,
@@ -146,30 +158,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
-                const MessageWidgetUser(),
+                SizedBox(
+                  height: 600,
+                  width: double.infinity,
+                  child: Consumer<UserProvider>(
+                    builder: (context, userProvider, child) {
+                      if (userProvider.users.isEmpty) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView.builder(
+                          itemCount: userProvider.users.length,
+                          itemBuilder: (context, index) {
+                            return MessageWidgetUser(
+                                email: userProvider.users[index].email,
+                                id: userProvider.users[index].id);
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ],

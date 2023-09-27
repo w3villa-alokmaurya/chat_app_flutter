@@ -1,5 +1,7 @@
 import 'package:chat_app/providers/auth_provider.dart';
+import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/providers/theme_provider.dart';
+import 'package:chat_app/providers/user_provider.dart';
 import 'package:chat_app/screens/homescreen.dart';
 import 'package:chat_app/screens/login_screen.dart';
 import 'package:chat_app/screens/signup_screen.dart';
@@ -17,6 +19,12 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ChatProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
         ),
       ],
       child: const MyApp(),
