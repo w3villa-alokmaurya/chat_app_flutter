@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Consumer<ChatProvider>(
                   builder: (context, chatProvider, child) {
                     if (chatProvider.messages.isEmpty) {
-                      return const Text('No messages');
+                      return const Text('No messages'); 
                     } else {
                       return SizedBox(
                         height: 800,
