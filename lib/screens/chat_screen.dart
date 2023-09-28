@@ -51,18 +51,18 @@ class _ChatScreenState extends State<ChatScreen> {
                           itemCount: chatProvider.messages.length,
                           itemBuilder: (context, index) {
                             return MessageBubble(
-                                text: chatProvider.messages[index].content,
-                                time: chatProvider.messages[index].timestamp,
-                                isMe: chatProvider.messages[index].senderId ==
-                                            context
-                                                .read<UserProvider>()
-                                                .currentUser
-                                                .id &&
-                                        chatProvider
-                                                .messages[index].receiverId ==
-                                            widget.userId
-                                    ? true
-                                    : false);
+                              text: chatProvider.messages[index].content,
+                              time: chatProvider.messages[index].timestamp,
+                              isMe: chatProvider.messages[index].senderId ==
+                                          context
+                                              .read<UserProvider>()
+                                              .currentUser
+                                              .id &&
+                                      chatProvider.messages[index].receiverId ==
+                                          widget.userId
+                                  ? true
+                                  : false,
+                            );
                           },
                         ),
                       );
