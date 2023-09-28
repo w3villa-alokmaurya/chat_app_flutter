@@ -4,6 +4,8 @@ import 'package:chat_app/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/user_provider.dart';
+
 class ChatScreen extends StatefulWidget {
   final String userId;
   const ChatScreen({super.key, required this.userId});
@@ -50,7 +52,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           itemBuilder: (context, index) {
                             return MessageBubble(
                               text: chatProvider.messages[index].content,
-                              isMe: false,
+                              time: chatProvider.messages[index].timestamp,
+                              
+                              isMe: chatProvider.messages[index].senderId ==
+                                          context
+                                              .read<UserProvider>()
+                                              .currentUser
+                                              .id &&
+                                      chatProvider.messages[index].receiverId ==
+                                          widget.userId
+                                  ? true
+                                  : false,
                             );
                           },
                         ),
@@ -77,10 +89,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    Provider.of<ChatProvider>(context).sendMessage(
-                        (context).read<AuthProvider>().token,
-                        _msgcontroller.text,
-                        widget.userId);
+                    Provider.of<ChatProvider>(context, listen: false)
+                        .sendMessage((context).read<AuthProvider>().token,
+                            _msgcontroller.text, widget.userId);
                     _msgcontroller.clear();
                   },
                 ),

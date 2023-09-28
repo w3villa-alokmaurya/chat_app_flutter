@@ -52,20 +52,15 @@ class ChatProvider with ChangeNotifier {
           {"content": message, "reciever_id": recieverId},
         ),
       );
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        List rawData = data;
-        for (var element in rawData) {
-          ChatMessage message = ChatMessage.fromJson(element);
-          listData.add(message);
-        }
+        // Map<String, dynamic> rawdata = data;
+        ChatMessage message = ChatMessage.fromJson(data);
+        listData.add(message);
         _messages = listData;
-        print('a');
         notifyListeners();
       } else {
-        // print(response.body);
-        print('message');
+        print('error');
       }
     } catch (e) {
       print("Exception in Data $e");

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class MessageBubble extends StatelessWidget {
   final String text;
   final bool isMe;
+  final String time;
 
   MessageBubble({
     required this.text,
     required this.isMe,
+    required this.time,
   });
 
   @override
@@ -22,9 +24,20 @@ class MessageBubble extends StatelessWidget {
             color: isMe ? Colors.blue : Colors.grey[300],
             borderRadius: BorderRadius.circular(12.0),
           ),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 16.0),
+          child: SizedBox(
+            width: 300,
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                Text(
+                  time,
+                  style: TextStyle(fontSize: 8, color: Colors.black),
+                ),
+              ],
+            ),
           ),
         ),
       ],

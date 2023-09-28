@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     String token = Provider.of<AuthProvider>(context, listen: false).token;
     Provider.of<UserProvider>(context, listen: false).getData(token);
+    Provider.of<UserProvider>(context, listen: false).getCurrentUser(token);
   }
 
   String selectedValue = 'Option 1';
@@ -56,6 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Row(
                         children: <Widget>[
+                          Text(
+                              '${context.read<UserProvider>().currentUser.email} id is ${context.read<UserProvider>().currentUser.id}'),
                           GestureDetector(
                               onTap: () {
                                 context.read<AuthProvider>().signOut();

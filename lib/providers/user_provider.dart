@@ -9,11 +9,9 @@ class UserProvider extends ChangeNotifier {
 
   List<User> get users => _users;
 
-  // void updateUserList(token) async {
-  //   List<User> data = await UsersApi().getData(token);
-  //   _users = data;
-  //   notifyListeners();
-  // }
+  late User _currentUser;
+  User get currentUser => _currentUser;
+
   Future<void> getData(String token) async {
     List<User> listData = [];
     try {
@@ -32,6 +30,29 @@ class UserProvider extends ChangeNotifier {
           listData.add(user);
         }
         _users = listData;
+        notifyListeners();
+      } else {
+        print(response.body);
+      }
+    } catch (e) {
+      print("Exception in Data $e");
+      throw e;
+    }
+  }
+
+  Future<void> getCurrentUser(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse(currentUserProfile),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        User user = User.fromJson(data['data']);
+        _currentUser = user;
         notifyListeners();
       } else {
         print(response.body);
