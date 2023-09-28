@@ -13,16 +13,13 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  String token = '';
   TextEditingController _msgcontroller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    token = Provider.of<AuthProvider>(context, listen: false).token;
-
     Provider.of<ChatProvider>(context, listen: false)
-        .getData(token, widget.userId);
+        .getData((context).read<AuthProvider>().token, widget.userId);
   }
 
   @override
@@ -80,8 +77,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    Provider.of<ChatProvider>(context)
-                        .sendMessage(token, _msgcontroller.text, widget.userId);
+                    Provider.of<ChatProvider>(context).sendMessage(
+                        (context).read<AuthProvider>().token,
+                        _msgcontroller.text,
+                        widget.userId);
                     _msgcontroller.clear();
                   },
                 ),

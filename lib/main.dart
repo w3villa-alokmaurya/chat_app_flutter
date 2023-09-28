@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
     MultiProvider(
@@ -39,10 +39,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
     authProvider.getLoggedInStatus();
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
@@ -59,8 +56,12 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(
         useMaterial3: true,
       ),
-      themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
-      home: authProvider.isLoggedIn ? HomeScreen() : LoginScreen(),
+      themeMode: context.read<ThemeProvider>().isDark
+          ? ThemeMode.dark
+          : ThemeMode.light,
+      home: authProvider.isLoggedIn && authProvider.token.isNotEmpty
+          ? HomeScreen()
+          : LoginScreen(),
     );
   }
 }

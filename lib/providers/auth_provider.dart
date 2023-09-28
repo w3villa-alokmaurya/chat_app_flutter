@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:chat_app/api/api.dart';
 import 'package:chat_app/models/user_model.dart';
@@ -7,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
-  dynamic _isLoggedIn;
+  bool _isLoggedIn = false;
   bool get isLoggedIn => _isLoggedIn;
 
   String _email = '';
@@ -120,7 +119,6 @@ class AuthProvider extends ChangeNotifier {
     _isLoggedIn = await prefs.getBool('isLoggedIn') ?? false;
     _token = await prefs.getString('accessToken') ?? '';
     notifyListeners();
-    // notifyListeners();
   }
 
   Future<User?> signup(String email, String password) async {
