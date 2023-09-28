@@ -15,11 +15,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMzRiZmY5NS1jYTkzLTQzYWItOTQ3MC05NmYxMWU4N2E4OWUiLCJzdWIiOiI0Iiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjk1ODE5NzI3LCJleHAiOjE2OTU4MjY5Mjd9.mf6X3hYUrBC5PQc1NxoronalznUttRvQMQMvyyRE-E4';
   @override
   void initState() {
     super.initState();
+    String token = Provider.of<AuthProvider>(context, listen: false).token;
     Provider.of<UserProvider>(context, listen: false).getData(token);
   }
 

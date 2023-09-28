@@ -1,3 +1,4 @@
+import 'package:chat_app/providers/auth_provider.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +13,14 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  String token = '';
   TextEditingController _msgcontroller = TextEditingController();
-  final token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIyMzRiZmY5NS1jYTkzLTQzYWItOTQ3MC05NmYxMWU4N2E4OWUiLCJzdWIiOiI0Iiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjk1ODE5NzI3LCJleHAiOjE2OTU4MjY5Mjd9.mf6X3hYUrBC5PQc1NxoronalznUttRvQMQMvyyRE-E4';
+
   @override
   void initState() {
     super.initState();
+    token = Provider.of<AuthProvider>(context, listen: false).token;
+
     Provider.of<ChatProvider>(context, listen: false)
         .getData(token, widget.userId);
   }

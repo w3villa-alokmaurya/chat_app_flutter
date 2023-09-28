@@ -1,7 +1,5 @@
-// auth_provider.dart
 
 import 'dart:convert';
-
 import 'package:chat_app/api/api.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:flutter/material.dart';
@@ -86,12 +84,14 @@ class AuthProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       _user = User(email: email, id: data['data']['id'].toString());
-      await setLoggedInStatus(true);
+      final Map<String, String> header = response.headers;
+      final String token = header['authorization']!.split(' ').last;
+      await setLoggedInStatus(true, token);
       // _isLoggedIn = true;
       notifyListeners();
       return _user;
     } else {
-      await setLoggedInStatus(false);
+      await setLoggedInStatus(false, '');
       // _isLoggedIn = false;
 
       notifyListeners();
@@ -99,24 +99,26 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> setLoggedInStatus(bool isLoggedIn) async {
+  Future<void> setLoggedInStatus(bool isLoggedIn, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', isLoggedIn);
+    await prefs.setString('accessToken', token);
   }
 
   Future<void> getLoggedInStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await Future.delayed(const Duration(seconds: 2));
     _isLoggedIn = await prefs.getBool('isLoggedIn') ?? false;
+    _token = await prefs.getString('accessToken') ?? '';
     notifyListeners();
   }
 
   void signOut() async {
     // Add logic to sign out if needed
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await setLoggedInStatus(false);
+    await setLoggedInStatus(false, '');
     _isLoggedIn = await prefs.getBool('isLoggedIn') ?? false;
+    _token = await prefs.getString('accessToken') ?? '';
     notifyListeners();
     // notifyListeners();
   }
